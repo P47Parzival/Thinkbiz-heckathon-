@@ -19,7 +19,7 @@ const Dashboard = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center">
               <Package className="h-8 w-8 text-blue-600" />
-              <h1 className="ml-2 text-2xl font-bold text-gray-900">Inventory Manager</h1>
+              <h1 className="ml-2 text-2xl font-bold text-gray-900">Janab Donations</h1>
             </div>
             <nav className="flex space-x-4">
               {['Dashboard', 'Inventory', 'Forecast', 'Donations', 'Settings'].map((item) => (
@@ -39,6 +39,19 @@ const Dashboard = () => {
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white">
           <h1 className="text-4xl font-bold mb-4">"Give a Meal, change a life"</h1>
           <p className="text-xl">"If you can't feed a HUNDRED people, then just feed ONE"<br/> -Mother Teressa</p>
+        </div>
+      </section>
+
+      {/* Writing Section */}
+      <section className="bg-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Our Mission</h2>
+          <p className="text-lg text-gray-700 mb-4">
+            At Inventory Manager, our mission is to ensure that no food goes to waste and that every meal reaches those in need. We work tirelessly to connect surplus food with communities facing food insecurity, providing immediate relief and long-term support.
+          </p>
+          <p className="text-lg text-gray-700 mb-4">
+            Through our various programs and initiatives, we aim to create a sustainable food system where everyone has access to nutritious meals. Join us in our mission to make a difference, one meal at a time.
+          </p>
         </div>
       </section>
 
@@ -97,13 +110,29 @@ const Dashboard = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <footer className="bg-gray-800 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <p className="text-sm text-gray-500">© 2025 Inventory Manager. All rights reserved.</p>
+            <div>
+              <h3 className="text-lg font-bold mb-2">Janabs</h3>
+              <p className="text-sm">© 2025 Janabs Donation. All rights reserved.</p>
+            </div>
             <div className="flex space-x-4">
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-700">Documentation</a>
-              <a href="#" className="text-sm text-gray-500 hover:text-gray-700">Help Center</a>
+              <a href="#" className="text-sm hover:text-gray-400">Documentation</a>
+              <a href="#" className="text-sm hover:text-gray-400">Help Center</a>
+              <a href="#" className="text-sm hover:text-gray-400">Privacy Policy</a>
+              <a href="#" className="text-sm hover:text-gray-400">Terms of Service</a>
+            </div>
+          </div>
+          <div className="mt-4 flex justify-between items-center">
+            <div className="flex space-x-4">
+              <a href="#" className="text-sm hover:text-gray-400">Facebook</a>
+              <a href="#" className="text-sm hover:text-gray-400">Twitter</a>
+              <a href="#" className="text-sm hover:text-gray-400">Instagram</a>
+              <a href="#" className="text-sm hover:text-gray-400">LinkedIn</a>
+            </div>
+            <div>
+              <p className="text-sm">Contact us: donations@janabs.com</p>
             </div>
           </div>
         </div>
