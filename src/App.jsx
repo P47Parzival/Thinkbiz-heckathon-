@@ -6,9 +6,10 @@ import Inventory from './Inventory';
 import Forecast from './Forecast';
 import Donations from './Donations';
 import Settings from './Settings';
+import DashboardPage from './Dashboardpage';
 import backgroundImage from './images/wha.jpg'; // Adjust the path as necessary
 
-const Dashboard = () => {
+const Homepage = () => {
   const navigate = useNavigate();
 
   return (
@@ -22,7 +23,7 @@ const Dashboard = () => {
               <h1 className="ml-2 text-2xl font-bold text-gray-900">Janab Donations</h1>
             </div>
             <nav className="flex space-x-4">
-              {['Dashboard', 'Inventory', 'Forecast', 'Donations', 'Settings'].map((item) => (
+              {['Homepage', 'Dashboard', 'Inventory', 'Forecast', 'Donations', 'Settings'].map((item) => (
                 <NavButton key={item} item={item} />
               ))}
             </nav>
@@ -134,8 +135,8 @@ Here are some statistics reported by Action Against Hunger, the Global Hunger In
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-bold mb-2">Janabs</h3>
-              <p className="text-sm">© 2025 Janabs Donation. All rights reserved.</p>
+              <h3 className="text-lg font-bold mb-2">Inventory Manager</h3>
+              <p className="text-sm">© 2025 Inventory Manager. All rights reserved.</p>
             </div>
             <div className="flex space-x-4">
               <a href="#" className="text-sm hover:text-gray-400">Documentation</a>
@@ -152,7 +153,7 @@ Here are some statistics reported by Action Against Hunger, the Global Hunger In
               <a href="#" className="text-sm hover:text-gray-400">LinkedIn</a>
             </div>
             <div>
-              <p className="text-sm">Contact us: donations@janabs.com</p>
+              <p className="text-sm">Contact us: info@inventorymanager.com</p>
             </div>
           </div>
         </div>
@@ -168,8 +169,10 @@ const NavButton = ({ item }) => {
     <button
       className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
       onClick={() => {
-        if (item === 'Dashboard') {
+        if (item === 'Homepage') {
           navigate('/');
+        } else if (item === 'Dashboard') {
+          navigate('/dashboard');
         } else if (item === 'Inventory') {
           navigate('/inventory');
         } else if (item === 'Forecast') {
@@ -190,8 +193,9 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Homepage />} />
         <Route path="/inventory" element={<Inventory />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/forecast" element={<Forecast />} />
         <Route path="/donations" element={<Donations />} />
         <Route path="/settings" element={<Settings />} />
