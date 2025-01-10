@@ -10,7 +10,7 @@ const Forecast = () => {
   useEffect(() => {
     const fetchForecastData = async () => {
         try {
-          const { data } = await axios.get("/api/forecast");
+          const { data } = await axios.get("http://localhost:3000/api/forecast");
           if (Array.isArray(data)) { // Check if the response is an array
             setForecastData(data);
           } else {
@@ -130,6 +130,34 @@ const Forecast = () => {
           </CardContent>
         </Card>
       </div>
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-bold mb-2">Inventory Manager</h3>
+              <p className="text-sm">© 2025 Inventory Manager. All rights reserved.</p>
+            </div>
+            <div className="flex space-x-4">
+              <a href="#" className="text-sm hover:text-gray-400">Documentation</a>
+              <a href="#" className="text-sm hover:text-gray-400">Help Center</a>
+              <a href="#" className="text-sm hover:text-gray-400">Privacy Policy</a>
+              <a href="#" className="text-sm hover:text-gray-400">Terms of Service</a>
+            </div>
+          </div>
+          <div className="mt-4 flex justify-between items-center">
+            <div className="flex space-x-4">
+              <a href="#" className="text-sm hover:text-gray-400">Facebook</a>
+              <a href="#" className="text-sm hover:text-gray-400">Twitter</a>
+              <a href="#" className="text-sm hover:text-gray-400">Instagram</a>
+              <a href="#" className="text-sm hover:text-gray-400">LinkedIn</a>
+            </div>
+            <div>
+              <p className="text-sm">Contact us: info@inventorymanager.com</p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

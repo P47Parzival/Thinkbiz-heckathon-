@@ -9,7 +9,7 @@ import Settings from './settingspage';
 import DashboardPage from './dashboardpage';
 import backgroundImage from './images/wha.jpg'; // Adjust the path as necessary
 import ProtectedRoute from './protectedroute'; // Import the ProtectedRoute component
-import { SignIn, SignUp } from '@clerk/clerk-react';
+import { SignIn, SignUp, useAuth } from '@clerk/clerk-react';
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -242,7 +242,11 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/sign-in" element={<SignIn />} /> {/* Clerk sign-in route */}
+        <Route path="/sign-in" element={
+          <div className="flex items-center justify-center min-h-screen bg-gray-100">
+          <SignIn />
+          </div>
+          } /> {/* Clerk sign-in route */}
         <Route path="/" element={<Homepage />} />
         <Route
           path="/inventory"

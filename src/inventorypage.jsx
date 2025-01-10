@@ -10,7 +10,7 @@ const Inventory = () => {
   useEffect(() => {
     const fetchInventory = async () => {
       try {
-        const { data } = await axios.get("/api/inventory");
+        const { data } = await axios.get("http://localhost:3000/api/inventory");
         if (Array.isArray(data)) {
             setInventory(data);
         } else {
@@ -26,7 +26,7 @@ const Inventory = () => {
 
   const handleAddItem = async () => {
     try {
-      const { data } = await axios.post("/api/inventory", form);
+      const { data } = await axios.post("http://localhost:3000/api/inventory", form);
       setInventory([...inventory, data]);
       setForm({ name: "", category: "", quantity: "", expiryDate: "" });
     } catch (error) {
@@ -34,9 +34,11 @@ const Inventory = () => {
     }
   };
 
+  
+
   const handleDeleteItem = async (id) => {
     try {
-      await axios.delete(`/api/inventory/${id}`);
+      await axios.delete(`http://localhost:3000/api/inventory/${id}`);
       setInventory(inventory.filter((item) => item._id !== id));
     } catch (error) {
       console.error("Error deleting item:", error);
@@ -139,6 +141,34 @@ const Inventory = () => {
           </CardContent>
         </Card>
       </div>
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-bold mb-2">Inventory Manager</h3>
+              <p className="text-sm">© 2025 Inventory Manager. All rights reserved.</p>
+            </div>
+            <div className="flex space-x-4">
+              <a href="#" className="text-sm hover:text-gray-400">Documentation</a>
+              <a href="#" className="text-sm hover:text-gray-400">Help Center</a>
+              <a href="#" className="text-sm hover:text-gray-400">Privacy Policy</a>
+              <a href="#" className="text-sm hover:text-gray-400">Terms of Service</a>
+            </div>
+          </div>
+          <div className="mt-4 flex justify-between items-center">
+            <div className="flex space-x-4">
+              <a href="#" className="text-sm hover:text-gray-400">Facebook</a>
+              <a href="#" className="text-sm hover:text-gray-400">Twitter</a>
+              <a href="#" className="text-sm hover:text-gray-400">Instagram</a>
+              <a href="#" className="text-sm hover:text-gray-400">LinkedIn</a>
+            </div>
+            <div>
+              <p className="text-sm">Contact us: info@inventorymanager.com</p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
