@@ -1,173 +1,253 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { BarChart, LineChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Package, AlertTriangle, Leaf, Heart } from 'lucide-react';
+import { Gift, Calendar, User, Plus, Info, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const Dashboard = () => {
-  const [stats, setStats] = useState({});
-  const [loading, setLoading] = useState(true);
+const Donations = () => {
+  const [donations, setDonations] = useState([]);
+  const [newDonation, setNewDonation] = useState({ items: [], recipient: "", date: "" });
+  const [donationAmount, setDonationAmount] = useState("");
+  const [ngos, setNgos] = useState([
+    {
+      name: "Visamo Foundation",
+      description: "Visamo Foundation is dedicated to providing education and support to underprivileged children.",
+      image: "https://prod-wishwa.s3.ap-south-1.amazonaws.com/campaign/0003-001-000000000174/images/3557-1722325904295-3.jpg",
+      whatsapp: "+911234567890",
+      rating: 4.225
+    },
+    {
+      name: "Lok Ashirwad Charitable Trust",
+      description: "Lok Ashirwad Charitable Trust works towards the welfare of the underprivileged.",
+      image: "https://c8.alamy.com/comp/2KBMPJ0/slum-children-and-other-dwellers-are-seen-on-the-entrance-point-of-their-living-slum-and-collects-cooked-food-donate-and-distribute-by-a-social-organization-in-between-the-lockdown-days-in-the-eastern-indian-state-odisha-s-capital-city-bhubaneswar-on-april-22-2020-photo-by-strnurphoto-2KBMPJ0.jpg",
+      whatsapp: "+911234567891",
+      rating: 4.625
+    },
+    {
+      name: "Shree Man Mandir Charitable Trust",
+      description: "Shree Man Mandir Charitable Trust is committed to various social welfare activities.",
+      image: "https://www.shutterstock.com/image-photo/panskura-west-bengal-29_09_2024-people-260nw-2526016093.jpg",
+      whatsapp: "+911234567892",
+      rating: 4.336
+    },
+    {
+      name: "Bhagwati Old Age Home (Ansh Foundation)",
+      description: "Bhagwati Old Age Home provides care and support to the elderly.",
+      image: "https://akshayachaitanya.org/public/assets/images/swastya/swastya-gallery-4.jpg",
+      whatsapp: "+911234567893",
+      rating: 4.2
+    },
+    {
+      name: "Matoshree Vrudhashram",
+      description: "Matoshree Vrudhashram offers a safe and caring environment for senior citizens.",
+      image: "https://www.shutterstock.com/image-photo/guwahati-india-30-june-2021-260nw-2000024270.jpg",
+      whatsapp: "+911234567894",
+      rating: 4.1
+    }
+  ]);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchDonations = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/dashboard");
-        setStats(data);
-        setLoading(false);
+        const { data } = await axios.get("http://localhost:3000/api/donations");
+        if (Array.isArray(data)) {
+          setDonations(data);
+        } else {
+          console.error("API response is not an array:", data);
+        }
       } catch (error) {
-        console.error("Error fetching dashboard stats:", error);
+        console.error("Error fetching donations:", error);
       }
     };
 
-    fetchStats();
+    const fetchNgos = async () => {
+      try {
+        const { data } = await axios.get("/api/ngos");
+        if (Array.isArray(data)) {
+          setNgos(data);
+        } else {
+          console.error("API response is not an array:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching NGOs:", error);
+      }
+    };
+
+    fetchDonations();
+    fetchNgos();
   }, []);
 
-  // Sample data for charts - replace with actual data from API
-  const inventoryData = [
-    { name: 'Mon', value: 240 },
-    { name: 'Tue', value: 300 },
-    { name: 'Wed', value: 280 },
-    { name: 'Thu', value: 320 },
-    { name: 'Fri', value: 290 },
-    { name: 'Sat', value: 250 },
-    { name: 'Sun', value: 225 }
-  ];
+  const handleAddDonation = async () => {
+    try {
+      const { data } = await axios.post("http://localhost:3000/api/donations", newDonation);
+      setDonations([...donations, data]);
+    } catch (error) {
+      console.error("Error adding donation:", error);
+    }
+  };
 
-  const forecastData = [
-    { name: 'Week 1', actual: 400, predicted: 380 },
-    { name: 'Week 2', actual: 380, predicted: 390 },
-    { name: 'Week 3', actual: 420, predicted: 400 },
-    { name: 'Week 4', actual: 390, predicted: 385 }
-  ];
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID"; // Replace with your PayPal client ID
+    script.addEventListener("load", () => {
+      window.paypal.Buttons({
+        createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: donationAmount
+              }
+            }]
+          });
+        },
+        onApprove: (data, actions) => {
+          return actions.order.capture().then(details => {
+            alert("Payment successful!");
+            // You can handle the response here, e.g., save the payment details to your database
+          });
+        }
+      }).render("#paypal-button-container");
+    });
+    document.body.appendChild(script);
+  }, [donationAmount]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
-
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Inventory</CardTitle>
-              <Package className="h-4 w-4 text-blue-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.totalInventory}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Near-Expiry Items</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-yellow-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.nearExpiry}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Wastage Avoided</CardTitle>
-              <Leaf className="h-4 w-4 text-green-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.wastageAvoided} kg</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Donations Made</CardTitle>
-              <Heart className="h-4 w-4 text-red-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.donationsMade}</div>
-            </CardContent>
-          </Card>
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center gap-3 mb-8">
+          <Gift className="w-8 h-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-gray-900">Donations Management</h1>
         </div>
 
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Inventory Usage</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={inventoryData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="value" fill="#3b82f6" />
-                  </BarChart>
-                </ResponsiveContainer>
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Plus className="w-5 h-5" />
+              New Donation
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  placeholder="Recipient"
+                  value={newDonation.recipient}
+                  onChange={(e) => setNewDonation({ ...newDonation, recipient: e.target.value })}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
-            </CardContent>
-          </Card>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="date"
+                  placeholder="Date"
+                  value={newDonation.date}
+                  onChange={(e) => setNewDonation({ ...newDonation, date: e.target.value })}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+            <button
+              onClick={handleAddDonation}
+              className="mt-4 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Donation
+            </button>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Demand Forecast</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={forecastData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="actual" stroke="#3b82f6" />
-                    <Line type="monotone" dataKey="predicted" stroke="#10b981" strokeDasharray="5 5" />
-                  </LineChart>
-                </ResponsiveContainer>
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <DollarSign className="w-5 h-5" />
+              Donate Money
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <div className="relative flex-grow">
+                <input
+                  type="number"
+                  placeholder="Amount"
+                  value={donationAmount}
+                  onChange={(e) => setDonationAmount(e.target.value)}
+                  className="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
-            </CardContent>
-          </Card>
-        </div>
+              <div id="paypal-button-container" className="flex-shrink-0"></div>
+            </div>
+            <button
+              className="mt-4 inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              Donate with PayPal
+            </button>
+          </CardContent>
+        </Card>
+
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Donation History</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-hidden rounded-lg border border-gray-200">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipient</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {donations.map((donation, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{donation.recipient}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(donation.date).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                          Completed
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Info className="w-5 h-5" />
+              NGO Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {ngos.map((ngo, index) => (
+                <div key={index} className="p-4 border border-gray-300 rounded-lg">
+                  <img src={ngo.image} alt={ngo.name} className="w-full h-48 object-cover rounded-lg mb-4" />
+                  <h3 className="text-lg font-bold text-gray-900">{ngo.name}</h3>
+                  <p className="text-sm text-gray-600">{ngo.description}</p>
+                  <p className="text-sm text-gray-600">Rating: {ngo.rating} / 5</p>
+                  <a href={`https://wa.me/${ngo.whatsapp}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                    Contact Them
+                  </a>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="text-lg font-bold mb-2">Inventory Manager</h3>
-              <p className="text-sm">© 2025 Inventory Manager. All rights reserved.</p>
-            </div>
-            <div className="flex space-x-4">
-              <a href="#" className="text-sm hover:text-gray-400">Documentation</a>
-              <a href="#" className="text-sm hover:text-gray-400">Help Center</a>
-              <a href="#" className="text-sm hover:text-gray-400">Privacy Policy</a>
-              <a href="#" className="text-sm hover:text-gray-400">Terms of Service</a>
-            </div>
-          </div>
-          <div className="mt-4 flex justify-between items-center">
-            <div className="flex space-x-4">
-              <a href="#" className="text-sm hover:text-gray-400">Facebook</a>
-              <a href="#" className="text-sm hover:text-gray-400">Twitter</a>
-              <a href="#" className="text-sm hover:text-gray-400">Instagram</a>
-              <a href="#" className="text-sm hover:text-gray-400">LinkedIn</a>
-            </div>
-            <div>
-              <p className="text-sm">Contact us: info@inventorymanager.com</p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
+
+export default Donations;
 
 export default Dashboard;
