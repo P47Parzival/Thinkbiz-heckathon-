@@ -1,21 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-// import Dashboard from './App.jsx'
-// import Dashboard from './dashboardpage'
-// import Inventory from './inventorypage'
-// import Forecast from './forecastpage'
-// import Donations from './donationpage'
-// import Settings from './settingspage'
 import Homepage from './homepage'
-// import './index.css';
+import { ClerkProvider } from '@clerk/clerk-react'
+
+const clerk_key = import.meta.env.VITE_CLERK_KEY
+
+if(!clerk_key){
+  throw new Error("key was not found")
+}
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* <Dashboard></Dashboard>
-    <Inventory></Inventory>
-    <Forecast></Forecast>
-    <Donations></Donations>
-    <Settings></Settings> */}
-    <Homepage></Homepage>
+    <ClerkProvider publishableKey={clerk_key}>
+      <Homepage></Homepage>
+    </ClerkProvider>
   </StrictMode>,
 )
